@@ -1,13 +1,30 @@
-"use strict";
-const Cesium = require("cesium");
-const obj2gltf = require("../../lib/obj2gltf");
-const createGltf = require("../../lib/createGltf");
-const loadObj = require("../../lib/loadObj");
-const { getDefaultMaterial } = require("../../lib/loadMtl");
+import { obj2gltf } from "../../lib/obj2gltf.js";
+import { createGltf } from "../../lib/createGltf.js";
+import { loadObj } from "../../lib/loadObj.js";
+import { loadMtl } from "../../lib/loadMtl.js";
 
-const clone = Cesium.clone;
-const defined = Cesium.defined;
-const WebGLConstants = Cesium.WebGLConstants;
+function clone(object, deep) {
+  if (object === null || typeof object !== "object") {
+    return object;
+  }
+
+  deep = deep ?? false;
+
+  const result = new object.constructor();
+  for (const propertyName in object) {
+    if (object.hasOwnProperty(propertyName)) {
+      let value = object[propertyName];
+      if (deep) {
+        value = clone(value, deep);
+      }
+      result[propertyName] = value;
+    }
+  }
+
+  return result;
+}
+
+const { getDefaultMaterial } = loadMtl;
 
 const boxObjPath = "specs/data/box/box.obj";
 const groupObjPath =
@@ -28,7 +45,7 @@ describe("createGltf", () => {
   let mixedAttributesObjData;
 
   beforeEach(async () => {
-    options = clone(obj2gltf.defaults);
+    options = structuredClone(obj2gltf.defaults);
     options.overridingTextures = {};
     options.logger = () => {};
 
@@ -65,7 +82,7 @@ describe("createGltf", () => {
 
   it("does not combine buffers when that buffer would exceed the Node buffer size limit", () => {
     spyOn(createGltf, "_getBufferMaxByteLength").and.returnValue(0);
-    const clonedOptions = clone(options, true);
+    const clonedOptions = clone(options);
     clonedOptions.separate = true;
 
     const gltf = createGltf(boxObjData, clonedOptions);
@@ -203,8 +220,7 @@ describe("createGltf", () => {
     referenceMaterial.pbrMetallicRoughness.baseColorTexture = {
       index: 0,
     };
-
-    const referenceMaterialNoTextures = clone(referenceMaterial, true);
+    const referenceMaterialNoTextures = structuredClone(referenceMaterial);
     referenceMaterialNoTextures.pbrMetallicRoughness.baseColorTexture =
       undefined;
 
@@ -253,7 +269,7 @@ describe("createGltf", () => {
       for (let j = 0; j < primitivesLength; ++j) {
         const primitive = primitives[j];
         const material = materials[primitive.material];
-        if (!defined(primitive.attributes.TEXCOORD_0)) {
+        if (typeof primitive.attributes.TEXCOORD_0 === "undefined") {
           expect(
             material.pbrMetallicRoughness.baseColorTexture,
           ).toBeUndefined();
@@ -300,7 +316,7 @@ describe("createGltf", () => {
     const indicesAccessor = gltf.accessors[primitive.indices];
     expect(indicesAccessor.count).toBe(indicesLength);
     expect(indicesAccessor.max[0]).toBe(vertexCount - 1);
-    expect(indicesAccessor.componentType).toBe(WebGLConstants.UNSIGNED_INT);
+    expect(indicesAccessor.componentType).toBe(0x1405);
 
     const positionAccessor = gltf.accessors[primitive.attributes.POSITION];
     expect(positionAccessor.count).toBe(vertexCount);

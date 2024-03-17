@@ -14,6 +14,5 @@
 .npmignore
 .prettierignore
 .travis.yml
-gulpfile.js
 *.tgz
 !doc/cesium.png

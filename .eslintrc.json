@@ -2,5 +2,9 @@
     "extends": ["cesium/node", "prettier"],
     "rules": {
         "no-unused-vars": ["error", {"args": "none"}]
-    }
+    },
+  		"parserOptions": {
+			"sourceType": "module",
+			"ecmaVersion": 2023
+		}
 }

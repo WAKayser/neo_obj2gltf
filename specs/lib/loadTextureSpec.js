@@ -1,5 +1,4 @@
-"use strict";
-const loadTexture = require("../../lib/loadTexture");
+import { loadTexture } from "../../lib/loadTexture.js";
 
 const pngTexturePath = "specs/data/box-complex-material/shininess.png";
 const jpgTexturePath = "specs/data/box-complex-material/emission.jpg";

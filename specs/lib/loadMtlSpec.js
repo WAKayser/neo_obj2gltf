@@ -1,11 +1,7 @@
-"use strict";
-const Cesium = require("cesium");
-const fsExtra = require("fs-extra");
-const loadMtl = require("../../lib/loadMtl");
-const loadTexture = require("../../lib/loadTexture");
-const obj2gltf = require("../../lib/obj2gltf");
-
-const clone = Cesium.clone;
+import fsExtra from "fs-extra";
+import { loadMtl } from "../../lib/loadMtl.js";
+import { loadTexture } from "../../lib/loadTexture.js";
+import { obj2gltf } from "../../lib/obj2gltf.js";
 
 const coloredMaterialPath = "specs/data/box/box.mtl";
 const texturedMaterialPath =
@@ -75,7 +71,7 @@ describe("loadMtl", () => {
   });
 
   beforeEach(() => {
-    options = clone(obj2gltf.defaults);
+    options = structuredClone(obj2gltf.defaults);
     options.overridingTextures = {};
     options.logger = () => {};
   });

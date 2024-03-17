@@ -1,8 +1,9 @@
 {
-  "name": "obj2gltf",
-  "version": "3.1.6",
+  "name": "neo_obj2gltf",
+  "version": "4.0.0",
   "description": "Convert OBJ model format to glTF",
   "license": "Apache-2.0",
+  "type": "module",
   "contributors": [
     {
       "name": "Cesium GS, Inc. and Contributors",
@@ -26,21 +27,16 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
-    "bluebird": "^3.7.2",
-    "cesium": "^1.86.1",
+    "earcut": "2.2.4",
     "fs-extra": "^11.0.0",
     "jpeg-js": "^0.4.3",
-    "mime": "^3.0.0",
-    "pngjs": "^7.0.0",
-    "yargs": "^17.2.1"
+    "pngjs": "^7.0.0"
   },
   "devDependencies": {
-    "cloc": "^2.8.0",
     "eslint": "^8.0.1",
     "eslint-config-cesium": "^10.0.1",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-n": "^16.1.0",
-    "gulp": "^4.0.2",
     "husky": "^8.0.3",
     "jasmine": "^5.0.0",
     "jasmine-spec-reporter": "^7.0.0",
@@ -61,15 +57,8 @@
     "pre-commit": "lint-staged",
     "jsdoc": "jsdoc ./lib -R ./README.md -d doc",
     "eslint": "eslint \"./**/*.js\" --cache --quiet",
-    "test": "gulp test",
-    "test-watch": "gulp test-watch",
-    "coverage": "gulp coverage",
-    "cloc": "gulp cloc",
+    "test": "jasmine --config=specs/jasmine.json",
     "prettier": "prettier --write \"**/*\"",
-    "prettier-check": "prettier --check \"**/*\"",
-    "generate-third-party": "gulp generate-third-party"
-  },
-  "bin": {
-    "obj2gltf": "./bin/obj2gltf.js"
+    "prettier-check": "prettier --check \"**/*\""
   }
 }

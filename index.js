@@ -1,2 +1,1 @@
-"use strict";
-module.exports = require("./lib/obj2gltf");
+export { obj2gltf } from "./lib/obj2gltf.js";

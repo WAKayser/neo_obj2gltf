@@ -1,4 +1,10 @@
-# OBJ2GLTF
+# NEO OBJ2GLTF
+
+This project is a fork of OBJ2GLTF.
+The goal is to make a version that works also in the browser.
+Along the way I also reduced dependencies, mostly by copying over cesium code.
+
+Also I removed gulp and for testing I use plain jasmine.
 
 Convert OBJ assets to [glTF](https://www.khronos.org/gltf) 2.0.
 

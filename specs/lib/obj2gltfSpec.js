@@ -1,10 +1,7 @@
-"use strict";
-const { DeveloperError } = require("cesium");
-const fsExtra = require("fs-extra");
-const path = require("path");
-const Promise = require("bluebird");
-const createGltf = require("../../lib/createGltf");
-const obj2gltf = require("../../lib/obj2gltf");
+import fsExtra from "fs-extra";
+import path from "path";
+import { createGltf } from "../../lib/createGltf.js";
+import { obj2gltf } from "../../lib/obj2gltf.js";
 
 const texturedObjPath = "specs/data/box-textured/box-textured.obj";
 const complexObjPath =
@@ -152,7 +149,7 @@ describe("obj2gltf", () => {
     } catch (e) {
       thrownError = e;
     }
-    expect(thrownError).toEqual(new DeveloperError("objPath is required"));
+    expect(thrownError).toEqual(new Error("objPath is required"));
   });
 
   it("throws if both options.writer and options.outputDirectory are undefined when writing separate resources", () => {
@@ -167,7 +164,7 @@ describe("obj2gltf", () => {
       thrownError = e;
     }
     expect(thrownError).toEqual(
-      new DeveloperError(
+      new Error(
         "Either options.writer or options.outputDirectory must be defined when writing separate resources.",
       ),
     );
@@ -186,7 +183,7 @@ describe("obj2gltf", () => {
       thrownError = e;
     }
     expect(thrownError).toEqual(
-      new DeveloperError(
+      new Error(
         "Only one material type may be set from [metallicRoughness, specularGlossiness, unlit].",
       ),
     );
@@ -207,7 +204,7 @@ describe("obj2gltf", () => {
       thrownError = e;
     }
     expect(thrownError).toEqual(
-      new DeveloperError(
+      new Error(
         "metallicRoughnessOcclusionTexture and specularGlossinessTexture cannot both be defined.",
       ),
     );
