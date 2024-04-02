@@ -1,10 +1,14 @@
 {
   "name": "neo_obj2gltf",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Convert OBJ model format to glTF",
   "license": "Apache-2.0",
   "type": "module",
   "contributors": [
+    {
+      "name": "Wouter Kayser",
+      "url": "https://github.com/WAKayser"
+    },
     {
       "name": "Cesium GS, Inc. and Contributors",
       "url": "https://github.com/CesiumGS/obj2gltf/graphs/contributors"
@@ -14,13 +18,13 @@
     "obj",
     "gltf"
   ],
-  "homepage": "https://github.com/CesiumGS/obj2gltf",
+  "homepage": "https://github.com/WAKayser/neo_obj2gltf",
   "repository": {
     "type": "git",
-    "url": "git@github.com:CesiumGS/obj2gltf.git"
+    "url": "git@github.com:WAKayser/neo_obj2gltf.git"
   },
   "bugs": {
-    "url": "https://github.com/CesiumGS/obj2gltf/issues"
+    "url": "https://github.com/WAKayser/neo_obj2gltf/issues"
   },
   "main": "index.js",
   "engines": {

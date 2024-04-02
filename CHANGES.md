@@ -1,5 +1,20 @@
 # Change Log
 
+### TODO
+
+- As input take in a File object.
+- Always output single binary GLB.
+- Allow setting file resolver via options.
+
+### 4.0.1 - 2024-04-03
+
+- remove fs-extra dependencies
+
+### 4.0.0 - 2024-04-02
+
+- Removed cesium and simplified output stage.
+- Created fork
+
 ### 3.2.0 - 2023-??-??
 
 - Added `doubleSidedMaterial` option to force materials to be rendered double sided. [#294](https://github.com/CesiumGS/obj2gltf/pull/294)
