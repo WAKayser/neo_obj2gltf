@@ -1,4 +1,3 @@
-import { createGltf } from "../../lib/createGltf.js";
 import { obj2gltf } from "../../lib/obj2gltf.js";
 import { openAsBlob } from "fs";
 
@@ -13,18 +12,8 @@ const outputDirectory = "output";
 const textureUrl = "specs/data/box-textured/cesium.png";
 
 describe("obj2gltf", () => {
-  it("converts obj to gltf", async () => {
-    const texturedObjBlob = await openAsBlob(texturedObjPath);
-    const gltf = await obj2gltf(texturedObjBlob, {
-      objDirectory: "specs/data/box-textured/",
-    });
-    expect(gltf).toBeDefined();
-    expect(gltf.images.length).toBe(1);
-  });
-
   it("converts obj to glb", async () => {
     const options = {
-      binary: true,
       objDirectory: "specs/data/box-textured/",
     };
     const texturedObjBlob = await openAsBlob(texturedObjPath);
@@ -32,36 +21,9 @@ describe("obj2gltf", () => {
     const magic = glb.toString("utf8", 0, 4);
     expect(magic).toBe("glTF");
   });
-
-  it("convert obj to gltf with separate resources", async () => {
-    const options = {
-      separate: true,
-      separateTextures: true,
-      outputDirectory: outputDirectory,
-      objDirectory: "specs/data/box-textured",
-    };
-    const texturedObjBlob = await openAsBlob(texturedObjPath);
-    await obj2gltf(texturedObjBlob, options);
-  });
-
-  it("convert obj to gltf with separate resources when buffer exceeds Node limit", async () => {
-    spyOn(createGltf, "_getBufferMaxByteLength").and.returnValue(0);
-    const options = {
-      separate: true,
-      separateTextures: true,
-      outputDirectory: outputDirectory,
-      objDirectory: "specs/data/box-textured/",
-    };
-    const texturedObjBlob = await openAsBlob(texturedObjPath);
-    await obj2gltf(texturedObjBlob, options);
-  });
-
   it("converts obj to glb with separate resources", async () => {
     const options = {
-      separate: true,
-      separateTextures: true,
       outputDirectory: outputDirectory,
-      binary: true,
       objDirectory: "specs/data/box-textured/",
     };
     const texturedObjBlob = await openAsBlob(texturedObjPath);
@@ -70,7 +32,6 @@ describe("obj2gltf", () => {
 
   it("converts obj with multiple textures", async () => {
     const options = {
-      separateTextures: true,
       outputDirectory: outputDirectory,
       objDirectory: "specs/data/box-complex-material",
     };
@@ -87,7 +48,6 @@ describe("obj2gltf", () => {
         emissiveTexture: textureUrl,
         alphaTexture: textureUrl,
       },
-      separateTextures: true,
       outputDirectory: outputDirectory,
       objDirectory: "specs/data/box-complex-material",
     };
@@ -106,7 +66,6 @@ describe("obj2gltf", () => {
         emissiveTexture: textureUrl,
         alphaTexture: textureUrl,
       },
-      separateTextures: true,
       outputDirectory: outputDirectory,
       objDirectory: "specs/data/box-complex-material",
     };
@@ -125,44 +84,6 @@ describe("obj2gltf", () => {
     const missingMtllibObjBlob = await openAsBlob(missingMtllibObjPath);
     await obj2gltf(missingMtllibObjBlob, options);
     expect(lastMessage.indexOf("Could not read material file") >= 0).toBe(true);
-  });
-
-  it("uses a custom writer", async () => {
-    const filePaths = [];
-    const fileContents = [];
-    const options = {
-      separate: true,
-      objDirectory: "specs/data/box-textured/",
-      writer: (relativePath, contents) => {
-        filePaths.push(relativePath);
-        fileContents.push(contents);
-      },
-    };
-    const texturedObjBlob = await openAsBlob(texturedObjPath);
-    await obj2gltf(texturedObjBlob, options);
-    expect(filePaths).toEqual(["cesium.png", "model.bin"]);
-    expect(fileContents[0]).toBeDefined();
-    expect(fileContents[1]).toBeDefined();
-  });
-
-  it("throws if both options.writer and options.outputDirectory are undefined when writing separate resources", async () => {
-    const options = {
-      separateTextures: true,
-      objDirectory: "specs/data/box-textured/",
-    };
-
-    const texturedObjBlob = await openAsBlob(texturedObjPath);
-    let thrownError;
-    try {
-      obj2gltf(texturedObjBlob, options);
-    } catch (e) {
-      thrownError = e;
-    }
-    expect(thrownError).toEqual(
-      new Error(
-        "Either options.writer or options.outputDirectory must be defined when writing separate resources.",
-      ),
-    );
   });
 
   it("throws if more than one material type is set", async () => {

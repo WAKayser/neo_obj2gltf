@@ -105,7 +105,6 @@ describe("createGltf", () => {
   it("does not combine buffers when that buffer would exceed the Node buffer size limit", () => {
     spyOn(createGltf, "_getBufferMaxByteLength").and.returnValue(0);
     const clonedOptions = clone(options);
-    clonedOptions.separate = true;
 
     const gltf = createGltf(boxObjData, clonedOptions);
     expect(gltf.accessors.length).toBe(4);

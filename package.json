@@ -1,6 +1,6 @@
 {
   "name": "neo_obj2gltf",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "description": "Convert OBJ model format to glTF",
   "license": "Apache-2.0",
   "type": "module",
