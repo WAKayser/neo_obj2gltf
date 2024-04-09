@@ -47,7 +47,6 @@ describe("createGltf", () => {
 
   beforeEach(async () => {
     options = structuredClone(obj2gltf.defaults);
-    options.overridingTextures = {};
     options.logger = () => {};
 
     const boxObjBlob = await openAsBlob(boxObjPath);

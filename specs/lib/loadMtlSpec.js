@@ -71,7 +71,6 @@ describe("loadMtl", () => {
 
   beforeEach(() => {
     options = structuredClone(obj2gltf.defaults);
-    options.overridingTextures = {};
     options.logger = () => {};
   });
 
@@ -151,21 +150,6 @@ describe("loadMtl", () => {
     expect(materials[2].pbrMetallicRoughness.baseColorFactor).toEqual([
       0.64, 0.0, 0.0, 1.0,
     ]);
-  });
-
-  it("sets overriding textures", async () => {
-    options.overridingTextures = {
-      metallicRoughnessOcclusionTexture: alphaTexturePath,
-      baseColorTexture: alphaTexturePath,
-      emissiveTexture: emissiveTexturePath,
-    };
-    const materials = await loadMtl(texturedMaterialPath, options);
-    const material = materials[0];
-    const pbr = material.pbrMetallicRoughness;
-    expect(pbr.baseColorTexture.name).toBe("alpha");
-    expect(pbr.metallicRoughnessTexture.name).toBe("alpha");
-    expect(material.emissiveTexture.name).toBe("emission");
-    expect(material.normalTexture.name).toBe("bump");
   });
 
   it("loads texture outside of the mtl directory", async () => {

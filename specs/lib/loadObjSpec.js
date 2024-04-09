@@ -53,7 +53,6 @@ let options;
 describe("loadObj", () => {
   beforeEach(() => {
     options = structuredClone(obj2gltf.defaults);
-    options.overridingTextures = {};
     options.logger = () => {};
   });
 

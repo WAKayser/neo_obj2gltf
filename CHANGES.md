@@ -8,6 +8,7 @@
 
 - Input is now a blob. If the obj uses more files, objDirectory should be set to the base directory.
 - Output is simplified to always be a GLB.
+- Remove all
 
 ### 4.0.1 - 2024-04-03
 
