@@ -1,7 +1,6 @@
-import fsExtra from "fs-extra";
-import path from "path";
 import { createGltf } from "../../lib/createGltf.js";
 import { obj2gltf } from "../../lib/obj2gltf.js";
+import { openAsBlob } from "fs";
 
 const texturedObjPath = "specs/data/box-textured/box-textured.obj";
 const complexObjPath =
@@ -14,12 +13,11 @@ const outputDirectory = "output";
 const textureUrl = "specs/data/box-textured/cesium.png";
 
 describe("obj2gltf", () => {
-  beforeEach(() => {
-    spyOn(fsExtra, "outputFile").and.returnValue(Promise.resolve());
-  });
-
   it("converts obj to gltf", async () => {
-    const gltf = await obj2gltf(texturedObjPath);
+    const texturedObjBlob = await openAsBlob(texturedObjPath);
+    const gltf = await obj2gltf(texturedObjBlob, {
+      objDirectory: "specs/data/box-textured/",
+    });
     expect(gltf).toBeDefined();
     expect(gltf.images.length).toBe(1);
   });
@@ -27,8 +25,10 @@ describe("obj2gltf", () => {
   it("converts obj to glb", async () => {
     const options = {
       binary: true,
+      objDirectory: "specs/data/box-textured/",
     };
-    const glb = await obj2gltf(texturedObjPath, options);
+    const texturedObjBlob = await openAsBlob(texturedObjPath);
+    const glb = await obj2gltf(texturedObjBlob, options);
     const magic = glb.toString("utf8", 0, 4);
     expect(magic).toBe("glTF");
   });
@@ -38,9 +38,10 @@ describe("obj2gltf", () => {
       separate: true,
       separateTextures: true,
       outputDirectory: outputDirectory,
+      objDirectory: "specs/data/box-textured",
     };
-    await obj2gltf(texturedObjPath, options);
-    // expect(fsExtra.outputFile.calls.count()).toBe(2); // Saves out .png and .bin
+    const texturedObjBlob = await openAsBlob(texturedObjPath);
+    await obj2gltf(texturedObjBlob, options);
   });
 
   it("convert obj to gltf with separate resources when buffer exceeds Node limit", async () => {
@@ -49,9 +50,10 @@ describe("obj2gltf", () => {
       separate: true,
       separateTextures: true,
       outputDirectory: outputDirectory,
+      objDirectory: "specs/data/box-textured/",
     };
-    await obj2gltf(texturedObjPath, options);
-    // expect(fsExtra.outputFile.calls.count()).toBe(5); // Saves out .png and four .bin for positions, normals, uvs, and indices
+    const texturedObjBlob = await openAsBlob(texturedObjPath);
+    await obj2gltf(texturedObjBlob, options);
   });
 
   it("converts obj to glb with separate resources", async () => {
@@ -60,18 +62,20 @@ describe("obj2gltf", () => {
       separateTextures: true,
       outputDirectory: outputDirectory,
       binary: true,
+      objDirectory: "specs/data/box-textured/",
     };
-    await obj2gltf(texturedObjPath, options);
-    // expect(fsExtra.outputFile.calls.count()).toBe(2); // Saves out .png and .bin
+    const texturedObjBlob = await openAsBlob(texturedObjPath);
+    await obj2gltf(texturedObjBlob, options);
   });
 
   it("converts obj with multiple textures", async () => {
     const options = {
       separateTextures: true,
       outputDirectory: outputDirectory,
+      objDirectory: "specs/data/box-complex-material",
     };
-    await obj2gltf(complexObjPath, options);
-    // expect(fsExtra.outputFile.calls.count()).toBe(5); // baseColor, metallicRoughness, occlusion, emission, normal
+    const complexObjBlob = await openAsBlob(complexObjPath);
+    await obj2gltf(complexObjBlob, options);
   });
 
   it("sets overriding textures (1)", async () => {
@@ -85,13 +89,11 @@ describe("obj2gltf", () => {
       },
       separateTextures: true,
       outputDirectory: outputDirectory,
+      objDirectory: "specs/data/box-complex-material",
     };
-    await obj2gltf(complexObjPath, options);
-    const args = fsExtra.outputFile.calls.allArgs();
-    const length = args.length;
-    for (let i = 0; i < length; ++i) {
-      expect(path.basename(args[i][0])).toBe(path.basename(textureUrl));
-    }
+
+    const complexObjBlob = await openAsBlob(complexObjPath);
+    await obj2gltf(complexObjBlob, options);
   });
 
   it("sets overriding textures (2)", async () => {
@@ -106,13 +108,10 @@ describe("obj2gltf", () => {
       },
       separateTextures: true,
       outputDirectory: outputDirectory,
+      objDirectory: "specs/data/box-complex-material",
     };
-    await obj2gltf(complexObjPath, options);
-    const args = fsExtra.outputFile.calls.allArgs();
-    const length = args.length;
-    for (let i = 0; i < length; ++i) {
-      expect(path.basename(args[i][0])).toBe(path.basename(textureUrl));
-    }
+    const complexObjBlob = await openAsBlob(complexObjPath);
+    await obj2gltf(complexObjBlob, options);
   });
 
   it("uses a custom logger", async () => {
@@ -121,8 +120,10 @@ describe("obj2gltf", () => {
       logger: (message) => {
         lastMessage = message;
       },
+      objDirectory: "specs/data/box-missing-mtllib",
     };
-    await obj2gltf(missingMtllibObjPath, options);
+    const missingMtllibObjBlob = await openAsBlob(missingMtllibObjPath);
+    await obj2gltf(missingMtllibObjBlob, options);
     expect(lastMessage.indexOf("Could not read material file") >= 0).toBe(true);
   });
 
@@ -131,35 +132,29 @@ describe("obj2gltf", () => {
     const fileContents = [];
     const options = {
       separate: true,
+      objDirectory: "specs/data/box-textured/",
       writer: (relativePath, contents) => {
         filePaths.push(relativePath);
         fileContents.push(contents);
       },
     };
-    await obj2gltf(texturedObjPath, options);
-    expect(filePaths).toEqual(["cesium.png", "box-textured.bin"]);
+    const texturedObjBlob = await openAsBlob(texturedObjPath);
+    await obj2gltf(texturedObjBlob, options);
+    expect(filePaths).toEqual(["cesium.png", "model.bin"]);
     expect(fileContents[0]).toBeDefined();
     expect(fileContents[1]).toBeDefined();
   });
 
-  it("throws if objPath is undefined", () => {
-    let thrownError;
-    try {
-      obj2gltf(undefined);
-    } catch (e) {
-      thrownError = e;
-    }
-    expect(thrownError).toEqual(new Error("objPath is required"));
-  });
-
-  it("throws if both options.writer and options.outputDirectory are undefined when writing separate resources", () => {
+  it("throws if both options.writer and options.outputDirectory are undefined when writing separate resources", async () => {
     const options = {
       separateTextures: true,
+      objDirectory: "specs/data/box-textured/",
     };
 
+    const texturedObjBlob = await openAsBlob(texturedObjPath);
     let thrownError;
     try {
-      obj2gltf(texturedObjPath, options);
+      obj2gltf(texturedObjBlob, options);
     } catch (e) {
       thrownError = e;
     }
@@ -170,15 +165,17 @@ describe("obj2gltf", () => {
     );
   });
 
-  it("throws if more than one material type is set", () => {
+  it("throws if more than one material type is set", async () => {
     const options = {
       metallicRoughness: true,
       specularGlossiness: true,
+      objDirectory: "specs/data/box-textured/",
     };
 
+    const texturedObjBlob = await openAsBlob(texturedObjPath);
     let thrownError;
     try {
-      obj2gltf(texturedObjPath, options);
+      obj2gltf(texturedObjBlob, options);
     } catch (e) {
       thrownError = e;
     }
@@ -189,17 +186,19 @@ describe("obj2gltf", () => {
     );
   });
 
-  it("throws if metallicRoughnessOcclusionTexture and specularGlossinessTexture are both defined", () => {
+  it("throws if metallicRoughnessOcclusionTexture and specularGlossinessTexture are both defined", async () => {
     const options = {
       overridingTextures: {
         metallicRoughnessOcclusionTexture: textureUrl,
         specularGlossinessTexture: textureUrl,
       },
+      objDirectory: "specs/data/box-textured/",
     };
 
     let thrownError;
+    const texturedObjBlob = await openAsBlob(texturedObjPath);
     try {
-      obj2gltf(texturedObjPath, options);
+      obj2gltf(texturedObjBlob, options);
     } catch (e) {
       thrownError = e;
     }

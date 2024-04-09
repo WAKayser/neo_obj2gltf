@@ -2,6 +2,7 @@ import { obj2gltf } from "../../lib/obj2gltf.js";
 import { createGltf } from "../../lib/createGltf.js";
 import { loadObj } from "../../lib/loadObj.js";
 import { loadMtl } from "../../lib/loadMtl.js";
+import { openAsBlob } from "fs";
 
 function clone(object, deep) {
   if (object === null || typeof object !== "object") {
@@ -49,11 +50,32 @@ describe("createGltf", () => {
     options.overridingTextures = {};
     options.logger = () => {};
 
-    boxObjData = await loadObj(boxObjPath, options);
-    groupObjData = await loadObj(groupObjPath, options);
-    complexObjData = await loadObj(complexObjPath, options);
-    noMaterialsObjData = await loadObj(noMaterialsObjPath, options);
-    mixedAttributesObjData = await loadObj(mixedAttributesObjPath, options);
+    const boxObjBlob = await openAsBlob(boxObjPath);
+    const groupObjBlob = await openAsBlob(groupObjPath);
+    const complexObjBlob = await openAsBlob(complexObjPath);
+    const noMaterialsObjBlob = await openAsBlob(noMaterialsObjPath);
+    const mixedAttributesObjBlob = await openAsBlob(mixedAttributesObjPath);
+
+    boxObjData = await loadObj(boxObjBlob, {
+      ...options,
+      objDirectory: "specs/data/box",
+    });
+    groupObjData = await loadObj(groupObjBlob, {
+      ...options,
+      objDirectory: "specs/data/box-objects-groups-materials",
+    });
+    complexObjData = await loadObj(complexObjBlob, {
+      ...options,
+      objDirectory: "specs/data/box-complex-material",
+    });
+    noMaterialsObjData = await loadObj(noMaterialsObjBlob, {
+      ...options,
+      objDirectory: "specs/data/box-no-materials",
+    });
+    mixedAttributesObjData = await loadObj(mixedAttributesObjBlob, {
+      ...options,
+      objDirectory: "specs/data/box-mixed-attributes-2",
+    });
   });
 
   it("simple gltf", () => {

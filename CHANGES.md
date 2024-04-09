@@ -2,9 +2,12 @@
 
 ### TODO
 
-- As input take in a File object.
 - Always output single binary GLB.
 - Allow setting file resolver via options.
+
+### 4.0.2 - UNRELEASED
+
+- Inpus is know a blob. If the obj uses more files, objDirectory should be set to the base directory.
 
 ### 4.0.1 - 2024-04-03
 

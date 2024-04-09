@@ -2,5 +2,6 @@
   "spec_dir": "specs",
   "spec_files": [
     "**/*Spec.js"
-  ]
+  ],
+  "stopOnSpecFailure ": true
 }

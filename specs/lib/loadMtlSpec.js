@@ -1,4 +1,3 @@
-import fsExtra from "fs-extra";
 import { loadMtl } from "../../lib/loadMtl.js";
 import { loadTexture } from "../../lib/loadTexture.js";
 import { obj2gltf } from "../../lib/obj2gltf.js";
@@ -155,7 +154,6 @@ describe("loadMtl", () => {
   });
 
   it("sets overriding textures", async () => {
-    spyOn(fsExtra, "readFile").and.callThrough();
     options.overridingTextures = {
       metallicRoughnessOcclusionTexture: alphaTexturePath,
       baseColorTexture: alphaTexturePath,
@@ -168,7 +166,6 @@ describe("loadMtl", () => {
     expect(pbr.metallicRoughnessTexture.name).toBe("alpha");
     expect(material.emissiveTexture.name).toBe("emission");
     expect(material.normalTexture.name).toBe("bump");
-    // expect(fsPromises.readFile.calls.count()).toBe(3);
   });
 
   it("loads texture outside of the mtl directory", async () => {

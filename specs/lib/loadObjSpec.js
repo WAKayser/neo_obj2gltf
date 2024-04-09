@@ -2,65 +2,27 @@ import Cartesian3 from "../../lib/Cartesian3.js";
 import path from "path";
 import { loadObj } from "../../lib/loadObj.js";
 import { obj2gltf } from "../../lib/obj2gltf.js";
+import { openAsBlob } from "fs";
 
-const objPath = "specs/data/box/box.obj";
-// const objRotatedUrl = "specs/data/box-rotated/box-rotated.obj";
 const objNormalsPath = "specs/data/box-normals/box-normals.obj";
-const objUvsPath = "specs/data/box-uvs/box-uvs.obj";
-const objPositionsOnlyPath =
-  "specs/data/box-positions-only/box-positions-only.obj";
-const objNegativeIndicesPath =
-  "specs/data/box-negative-indices/box-negative-indices.obj";
-const objTrianglesPath = "specs/data/box-triangles/box-triangles.obj";
-const objObjectsPath = "specs/data/box-objects/box-objects.obj";
 const objGroupsPath = "specs/data/box-groups/box-groups.obj";
 const objObjectsGroupsPath =
   "specs/data/box-objects-groups/box-objects-groups.obj";
-const objObjectsGroupsMaterialsPath =
-  "specs/data/box-objects-groups-materials/box-objects-groups-materials.obj";
 const objObjectsGroupsMaterialsPath2 =
   "specs/data/box-objects-groups-materials-2/box-objects-groups-materials-2.obj";
-const objUsemtlPath = "specs/data/box-usemtl/box-usemtl.obj";
 const objNoMaterialsPath = "specs/data/box-no-materials/box-no-materials.obj";
-const objMultipleMaterialsPath =
-  "specs/data/box-multiple-materials/box-multiple-materials.obj";
-const objUncleanedPath = "specs/data/box-uncleaned/box-uncleaned.obj";
-const objMtllibPath = "specs/data/box-mtllib/box-mtllib.obj";
-const objMtllibSpacesPath = "specs/data/box-mtllib-spaces/box mtllib.obj";
-const objMissingMtllibPath =
-  "specs/data/box-missing-mtllib/box-missing-mtllib.obj";
-const objMissingUsemtlPath =
-  "specs/data/box-missing-usemtl/box-missing-usemtl.obj";
-const objUnnamedMaterialPath =
-  "specs/data/box-unnamed-material/box-unnamed-material.obj";
-const objExternalResourcesPath =
-  "specs/data/box-external-resources/box-external-resources.obj";
 const objResourcesInRootPath =
   "specs/data/box-resources-in-root/box-resources-in-root.obj";
 const objExternalResourcesInRootPath =
   "specs/data/box-external-resources-in-root/box-external-resources-in-root.obj";
-const objTexturedPath = "specs/data/box-textured/box-textured.obj";
-const objMissingTexturePath =
-  "specs/data/box-missing-texture/box-missing-texture.obj";
 const objSubdirectoriesPath = "specs/data/box-subdirectories/box-textured.obj";
-const objWindowsPaths = "specs/data/box-windows-paths/box-windows-paths.obj";
 const objInvalidContentsPath = "specs/data/box/box.mtl";
-const objConcavePath = "specs/data/concave/concave.obj";
-const objUnnormalizedPath = "specs/data/box-unnormalized/box-unnormalized.obj";
-const objMixedAttributesPath =
-  "specs/data/box-mixed-attributes/box-mixed-attributes.obj";
-const objMissingAttributesPath =
-  "specs/data/box-missing-attributes/box-missing-attributes.obj";
 const objIncompletePositionsPath =
   "specs/data/box-incomplete-attributes/box-incomplete-positions.obj";
 const objIncompleteNormalsPath =
   "specs/data/box-incomplete-attributes/box-incomplete-normals.obj";
 const objIncompleteUvsPath =
   "specs/data/box-incomplete-attributes/box-incomplete-uvs.obj";
-const objIncorrectWindingOrderPath =
-  "specs/data/box-incorrect-winding-order/box-incorrect-winding-order.obj";
-const objWithTabs = "specs/data/box-with-tabs/box-with-tabs.obj";
-const objInvalidPath = "invalid.obj";
 
 function getMeshes(data) {
   let meshes = [];
@@ -96,14 +58,18 @@ describe("loadObj", () => {
   });
 
   it("loads obj with positions, normals, and uvs", async () => {
-    const data = await loadObj(objPath, options);
+    const objBlob = await openAsBlob("specs/data/box/box.obj");
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box",
+    });
     const materials = data.materials;
     const nodes = data.nodes;
     const name = data.name;
     const meshes = getMeshes(data);
     const primitives = getPrimitives(data);
 
-    expect(name).toBe("box");
+    expect(name).toBe("model");
     expect(materials.length).toBe(1);
     expect(nodes.length).toBe(1);
     expect(meshes.length).toBe(1);
@@ -123,7 +89,11 @@ describe("loadObj", () => {
   });
 
   it("loads obj with normals", async () => {
-    const data = await loadObj(objNormalsPath, options);
+    const objBlob = await openAsBlob(objNormalsPath);
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-normals",
+    });
     const primitive = getPrimitives(data)[0];
     expect(primitive.positions.length / 3).toBe(24);
     expect(primitive.normals.length / 3).toBe(24);
@@ -131,7 +101,13 @@ describe("loadObj", () => {
   });
 
   it("normalizes normals", async () => {
-    const data = await loadObj(objUnnormalizedPath, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-unnormalized/box-unnormalized.obj",
+    );
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-unnormalized",
+    });
     const scratchNormal = new Cartesian3();
     const primitive = getPrimitives(data)[0];
     const normals = primitive.normals;
@@ -151,7 +127,11 @@ describe("loadObj", () => {
   });
 
   it("loads obj with uvs", async () => {
-    const data = await loadObj(objUvsPath, options);
+    const objBlob = await openAsBlob("specs/data/box-uvs/box-uvs.obj");
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-uvs",
+    });
     const primitive = getPrimitives(data)[0];
     expect(primitive.positions.length / 3).toBe(20);
     expect(primitive.normals.length / 3).toBe(0);
@@ -159,9 +139,22 @@ describe("loadObj", () => {
   });
 
   it("loads obj with negative indices", async () => {
+    const objBlob1 = await openAsBlob(
+      "specs/data/box-positions-only/box-positions-only.obj",
+    );
+    const objBlob2 = await openAsBlob(
+      "specs/data/box-negative-indices/box-negative-indices.obj",
+    );
+
     const results = [
-      await loadObj(objPositionsOnlyPath, options),
-      await loadObj(objNegativeIndicesPath, options),
+      await loadObj(objBlob1, {
+        ...options,
+        objDirectory: "specs/data/box-positions-only",
+      }),
+      await loadObj(objBlob2, {
+        ...options,
+        objDirectory: "specs/data/box-negative-indices",
+      }),
     ];
     const positionsReference = getPrimitives(
       results[0],
@@ -171,14 +164,22 @@ describe("loadObj", () => {
   });
 
   it("loads obj with triangle faces", async () => {
-    const data = await loadObj(objTrianglesPath, options);
+    const objBlob = await openAsBlob("specs/data/box-objects/box-objects.obj");
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-objects",
+    });
     const primitive = getPrimitives(data)[0];
     expect(primitive.positions.length / 3).toBe(24);
     expect(primitive.indices.length).toBe(36);
   });
 
   it("loads obj with objects", async () => {
-    const data = await loadObj(objObjectsPath, options);
+    const objBlob = await openAsBlob("specs/data/box-objects/box-objects.obj");
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-objects",
+    });
     const nodes = data.nodes;
     expect(nodes.length).toBe(3);
     expect(nodes[0].name).toBe("CubeBlue");
@@ -193,7 +194,11 @@ describe("loadObj", () => {
   });
 
   it("loads obj with groups", async () => {
-    const data = await loadObj(objGroupsPath, options);
+    const objBlob = await openAsBlob(objGroupsPath);
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-groups",
+    });
     const nodes = data.nodes;
     expect(nodes.length).toBe(3);
     expect(nodes[0].name).toBe("CubeBlue");
@@ -208,7 +213,11 @@ describe("loadObj", () => {
   });
 
   it("loads obj with objects and groups", async () => {
-    const data = await loadObj(objObjectsGroupsPath, options);
+    const objObjectsGroupsBlob = await openAsBlob(objObjectsGroupsPath);
+    const data = await loadObj(objObjectsGroupsBlob, {
+      ...options,
+      objDirectory: "specs/data/box-objects-groups",
+    });
     const nodes = data.nodes;
     expect(nodes.length).toBe(3);
     expect(nodes[0].name).toBe("CubeBlue");
@@ -248,26 +257,44 @@ describe("loadObj", () => {
   }
 
   it("loads obj with objects, groups, and materials", async () => {
-    const data = await loadObj(objObjectsGroupsMaterialsPath, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-objects-groups-materials/box-objects-groups-materials.obj",
+    );
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-objects-groups-materials",
+    });
     loadsObjWithObjectsGroupsAndMaterials(data);
   });
 
   it("loads obj with objects, groups, and materials (2)", async () => {
     // The usemtl lines are placed in an unordered fashion but
     // should produce the same result as the previous test
-    const data = await loadObj(objObjectsGroupsMaterialsPath2, options);
+    const objBlob = await openAsBlob(objObjectsGroupsMaterialsPath2);
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-objects-groups-materials-2",
+    });
     loadsObjWithObjectsGroupsAndMaterials(data);
   });
 
   it("loads obj with concave face containing 5 vertices", async () => {
-    const data = await loadObj(objConcavePath, options);
+    const objBlob = await openAsBlob("specs/data/concave/concave.obj");
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/concave",
+    });
     const primitive = getPrimitives(data)[0];
     expect(primitive.positions.length / 3).toBe(30);
     expect(primitive.indices.length).toBe(48);
   });
 
   it("loads obj with usemtl only", async () => {
-    const data = await loadObj(objUsemtlPath, options);
+    const objBlob = await openAsBlob("specs/data/box-usemtl/box-usemtl.obj");
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-usemtl",
+    });
     const nodes = data.nodes;
     expect(nodes.length).toBe(1);
     expect(nodes[0].name).toBe("Node"); // default name
@@ -284,7 +311,8 @@ describe("loadObj", () => {
   });
 
   it("loads obj with no materials", async () => {
-    const data = await loadObj(objNoMaterialsPath, options);
+    const objBlob = await openAsBlob(objNoMaterialsPath);
+    const data = await loadObj(objBlob, options);
     const nodes = data.nodes;
     expect(nodes.length).toBe(1);
     expect(nodes[0].name).toBe("Node"); // default name
@@ -295,7 +323,13 @@ describe("loadObj", () => {
 
   it("loads obj with multiple materials", async () => {
     // The usemtl markers are interleaved, but should condense to just three primitives
-    const data = await loadObj(objMultipleMaterialsPath, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-multiple-materials/box-multiple-materials.obj",
+    );
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-multiple-materials",
+    });
     const nodes = data.nodes;
     expect(nodes.length).toBe(1);
 
@@ -320,7 +354,13 @@ describe("loadObj", () => {
   it("loads obj uncleaned", async () => {
     // Obj with extraneous o, g, and usemtl lines
     // Also tests handling of o and g lines with the same names
-    const data = await loadObj(objUncleanedPath, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-uncleaned/box-uncleaned.obj",
+    );
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-uncleaned",
+    });
     const nodes = data.nodes;
     const meshes = getMeshes(data);
     const primitives = getPrimitives(data);
@@ -334,7 +374,11 @@ describe("loadObj", () => {
   });
 
   it("loads obj with multiple mtllibs", async () => {
-    const data = await loadObj(objMtllibPath, options);
+    const objBlob = await openAsBlob("specs/data/box-mtllib/box-mtllib.obj");
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-mtllib",
+    });
     const materials = data.materials;
     expect(materials.length).toBe(3);
 
@@ -358,7 +402,14 @@ describe("loadObj", () => {
   });
 
   it("loads obj with mtllib paths with spaces", async () => {
-    const data = await loadObj(objMtllibSpacesPath, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-mtllib-spaces/box mtllib.obj",
+    );
+
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-mtllib-spaces",
+    });
     const materials = data.materials;
     expect(materials.length).toBe(3);
 
@@ -384,8 +435,14 @@ describe("loadObj", () => {
   it("loads obj with missing mtllib", async () => {
     const spy = jasmine.createSpy("logger");
     options.logger = spy;
+    const objBlob = await openAsBlob(
+      "specs/data/box-missing-mtllib/box-missing-mtllib.obj",
+    );
 
-    const data = await loadObj(objMissingMtllibPath, options);
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-missing-mtllib",
+    });
     expect(data.materials.length).toBe(0);
     expect(spy.calls.argsFor(0)[0].indexOf("ENOENT") >= 0).toBe(true);
     expect(spy.calls.argsFor(0)[0].indexOf(path.resolve("/box.mtl")) >= 0).toBe(
@@ -405,19 +462,37 @@ describe("loadObj", () => {
   });
 
   it("loads obj with missing usemtl", async () => {
-    const data = await loadObj(objMissingUsemtlPath, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-missing-usemtl/box-missing-usemtl.obj",
+    );
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-missing-usemtl",
+    });
     expect(data.materials.length).toBe(1);
     expect(data.nodes[0].meshes[0].primitives[0].material).toBe("Material");
   });
 
   it("loads obj with unnamed material", async () => {
-    const data = await loadObj(objUnnamedMaterialPath, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-unnamed-material/box-unnamed-material.obj",
+    );
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-unnamed-material",
+    });
     expect(data.materials.length).toBe(1);
     expect(data.nodes[0].meshes[0].primitives[0].material).toBe("");
   });
 
   it("loads .mtl outside of the obj directory", async () => {
-    const data = await loadObj(objExternalResourcesPath, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-external-resources/box-external-resources.obj",
+    );
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-external-resources",
+    });
     const materials = data.materials;
     expect(materials.length).toBe(2);
 
@@ -435,7 +510,13 @@ describe("loadObj", () => {
     options.logger = spy;
     options.secure = true;
 
-    const data = await loadObj(objExternalResourcesPath, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-external-resources/box-external-resources.obj",
+    );
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-external-resources",
+    });
     expect(data.materials.length).toBe(1); // obj references 2 materials, one of which is outside the input directory
     expect(
       spy.calls
@@ -451,7 +532,11 @@ describe("loadObj", () => {
   });
 
   it("loads .mtl from root directory when the .mtl path does not exist", async () => {
-    const data = await loadObj(objResourcesInRootPath, options);
+    const objBlob = await openAsBlob(objResourcesInRootPath);
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-resources-in-root",
+    });
     const baseColorTexture =
       data.materials[0].pbrMetallicRoughness.baseColorTexture;
     expect(baseColorTexture.name).toBe("cesium");
@@ -460,8 +545,11 @@ describe("loadObj", () => {
 
   it("loads .mtl from root directory when the .mtl path is outside of the obj directory and secure is true", async () => {
     options.secure = true;
-
-    const data = await loadObj(objExternalResourcesInRootPath, options);
+    const objBlob = await openAsBlob(objExternalResourcesInRootPath);
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-external-resources-in-root",
+    });
     const materials = data.materials;
     expect(materials.length).toBe(2);
 
@@ -475,7 +563,13 @@ describe("loadObj", () => {
   });
 
   it("loads obj with texture", async () => {
-    const data = await loadObj(objTexturedPath, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-textured/box-textured.obj",
+    );
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-textured",
+    });
     const baseColorTexture =
       data.materials[0].pbrMetallicRoughness.baseColorTexture;
     expect(baseColorTexture.name).toBe("cesium");
@@ -486,7 +580,14 @@ describe("loadObj", () => {
     const spy = jasmine.createSpy("logger");
     options.logger = spy;
 
-    const data = await loadObj(objMissingTexturePath, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-missing-texture/box-missing-texture.obj",
+    );
+
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-missing-texture",
+    });
     const baseColorTexture =
       data.materials[0].pbrMetallicRoughness.baseColorTexture;
     expect(baseColorTexture).toBeUndefined();
@@ -508,7 +609,11 @@ describe("loadObj", () => {
   });
 
   it("loads obj with subdirectories", async () => {
-    const data = await loadObj(objSubdirectoriesPath, options);
+    const objBlob = await openAsBlob(objSubdirectoriesPath);
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-subdirectories",
+    });
     const baseColorTexture =
       data.materials[0].pbrMetallicRoughness.baseColorTexture;
     expect(baseColorTexture.name).toBe("cesium");
@@ -516,7 +621,13 @@ describe("loadObj", () => {
   });
 
   it("loads obj with windows paths", async () => {
-    const data = await loadObj(objWindowsPaths, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-windows-paths/box-windows-paths.obj",
+    );
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-windows-paths",
+    });
     const baseColorTexture =
       data.materials[0].pbrMetallicRoughness.baseColorTexture;
     expect(baseColorTexture.name).toBe("cesium");
@@ -527,7 +638,13 @@ describe("loadObj", () => {
     /**
      * We know Tinkercad to produce files with coordinates separated by tabs.
      */
-    const data = await loadObj(objWithTabs, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-with-tabs/box-with-tabs.obj",
+    );
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-with-tabs",
+    });
     const primitive = getPrimitives(data)[0];
     expect(primitive.positions.length / 3).toBe(24);
     expect(primitive.normals.length / 3).toBe(24);
@@ -535,7 +652,13 @@ describe("loadObj", () => {
   });
 
   it("separates faces that don't use the same attributes as other faces in the primitive", async () => {
-    const data = await loadObj(objMixedAttributesPath, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-mixed-attributes/box-mixed-attributes.obj",
+    );
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-mixed-attributes",
+    });
     const primitives = getPrimitives(data);
     expect(primitives.length).toBe(4);
     expect(primitives[0].indices.length).toBe(18); // 6 faces
@@ -598,7 +721,13 @@ describe("loadObj", () => {
   // });
 
   it("ignores missing normals and uvs", async () => {
-    const data = await loadObj(objMissingAttributesPath, options);
+    const objBlob = await openAsBlob(
+      "specs/data/box-missing-attributes/box-missing-attributes.obj",
+    );
+    const data = await loadObj(objBlob, {
+      ...options,
+      objDirectory: "specs/data/box-missing-attributes",
+    });
     const primitive = getPrimitives(data)[0];
     expect(primitive.positions.length).toBeGreaterThan(0);
     expect(primitive.normals.length).toBe(0);
@@ -606,7 +735,8 @@ describe("loadObj", () => {
   });
 
   async function loadAndGetIndices(objPath, options) {
-    const data = await loadObj(objPath, options);
+    const objBlob = await openAsBlob(objPath);
+    const data = await loadObj(objBlob, options);
     const primitive = getPrimitives(data)[0];
     const indices = primitive.indices;
     return new Uint16Array(indices.toUint16Buffer().buffer);
@@ -614,14 +744,16 @@ describe("loadObj", () => {
 
   it("applies triangle winding order sanitization", async () => {
     options.triangleWindingOrderSanitization = false;
+    options.objDirectory = "specs/data/box-incorrect-winding-order";
+
     const indicesIncorrect = await loadAndGetIndices(
-      objIncorrectWindingOrderPath,
+      "specs/data/box-incorrect-winding-order/box-incorrect-winding-order.obj",
       options,
     );
 
     options.triangleWindingOrderSanitization = true;
     const indicesCorrect = await loadAndGetIndices(
-      objIncorrectWindingOrderPath,
+      "specs/data/box-incorrect-winding-order/box-incorrect-winding-order.obj",
       options,
     );
 
@@ -636,8 +768,9 @@ describe("loadObj", () => {
 
   it("throws when position index is out of bounds", async () => {
     let thrownError;
+    const objBlob = await openAsBlob(objIncompletePositionsPath);
     try {
-      await loadObj(objIncompletePositionsPath, options);
+      await loadObj(objBlob, options);
     } catch (e) {
       thrownError = e;
     }
@@ -645,9 +778,10 @@ describe("loadObj", () => {
   });
 
   it("throws when normal index is out of bounds", async () => {
+    const objBlob = await openAsBlob(objIncompleteNormalsPath);
     let thrownError;
     try {
-      await loadObj(objIncompleteNormalsPath, options);
+      await loadObj(objBlob, options);
     } catch (e) {
       thrownError = e;
     }
@@ -655,9 +789,10 @@ describe("loadObj", () => {
   });
 
   it("throws when uv index is out of bounds", async () => {
+    const blobObj = await openAsBlob(objIncompleteUvsPath);
     let thrownError;
     try {
-      await loadObj(objIncompleteUvsPath, options);
+      await loadObj(blobObj, options);
     } catch (e) {
       thrownError = e;
     }
@@ -665,26 +800,15 @@ describe("loadObj", () => {
   });
 
   it("throws when file has invalid contents", async () => {
+    const blobObj = await openAsBlob(objInvalidContentsPath);
     let thrownError;
     try {
-      await loadObj(objInvalidContentsPath, options);
+      await loadObj(blobObj, options);
     } catch (e) {
       thrownError = e;
     }
     expect(thrownError).toEqual(
-      new Error(`${objInvalidContentsPath} does not have any geometry data`),
+      new Error(`supplied model does not have any geometry data`),
     );
-  });
-
-  it("throw when reading invalid file", async () => {
-    let thrownError;
-    try {
-      await loadObj(objInvalidPath, options);
-    } catch (e) {
-      thrownError = e;
-    }
-    expect(
-      thrownError.message.startsWith("ENOENT: no such file or directory"),
-    ).toBe(true);
   });
 });
