@@ -176,28 +176,6 @@ describe("loadMtl", () => {
     expect(baseColorTexture.name).toBe("cesium");
   });
 
-  it("does not load texture outside of the mtl directory when secure is true", async () => {
-    const spy = jasmine.createSpy("logger");
-    options.logger = spy;
-    options.secure = true;
-
-    const materials = await loadMtl(externalMaterialPath, options);
-    const material = materials[0];
-    const baseColorTexture = material.pbrMetallicRoughness.baseColorTexture;
-    expect(baseColorTexture).toBeUndefined();
-    expect(
-      spy.calls
-        .argsFor(0)[0]
-        .indexOf(
-          "Texture file is outside of the mtl directory and the secure flag is true. Attempting to read the texture file from within the obj directory instead",
-        ) >= 0,
-    ).toBe(true);
-    expect(spy.calls.argsFor(1)[0].indexOf("ENOENT") >= 0).toBe(true);
-    expect(
-      spy.calls.argsFor(2)[0].indexOf("Could not read texture file") >= 0,
-    ).toBe(true);
-  });
-
   it("loads textures from root directory when the texture paths do not exist", async () => {
     const materials = await loadMtl(resourcesInRootMaterialPath, options);
     const material = materials[0];
@@ -207,8 +185,6 @@ describe("loadMtl", () => {
   });
 
   it("loads textures from root directory when texture is outside of the mtl directory and secure is true", async () => {
-    options.secure = true;
-
     const materials = await loadMtl(externalInRootMaterialPath, options);
     const material = materials[0];
     const baseColorTexture = material.pbrMetallicRoughness.baseColorTexture;

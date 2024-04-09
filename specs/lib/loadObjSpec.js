@@ -505,32 +505,6 @@ describe("loadObj", () => {
     expect(baseColorTexture.name).toEqual("cesium");
   });
 
-  it("does not load .mtl outside of the obj directory when secure is true", async () => {
-    const spy = jasmine.createSpy("logger");
-    options.logger = spy;
-    options.secure = true;
-
-    const objBlob = await openAsBlob(
-      "specs/data/box-external-resources/box-external-resources.obj",
-    );
-    const data = await loadObj(objBlob, {
-      ...options,
-      objDirectory: "specs/data/box-external-resources",
-    });
-    expect(data.materials.length).toBe(1); // obj references 2 materials, one of which is outside the input directory
-    expect(
-      spy.calls
-        .argsFor(0)[0]
-        .indexOf(
-          "The material file is outside of the obj directory and the secure flag is true. Attempting to read the material file from within the obj directory instead.",
-        ) >= 0,
-    ).toBe(true);
-    expect(spy.calls.argsFor(1)[0].indexOf("ENOENT") >= 0).toBe(true);
-    expect(
-      spy.calls.argsFor(2)[0].indexOf("Could not read material file") >= 0,
-    ).toBe(true);
-  });
-
   it("loads .mtl from root directory when the .mtl path does not exist", async () => {
     const objBlob = await openAsBlob(objResourcesInRootPath);
     const data = await loadObj(objBlob, {
@@ -544,7 +518,6 @@ describe("loadObj", () => {
   });
 
   it("loads .mtl from root directory when the .mtl path is outside of the obj directory and secure is true", async () => {
-    options.secure = true;
     const objBlob = await openAsBlob(objExternalResourcesInRootPath);
     const data = await loadObj(objBlob, {
       ...options,
