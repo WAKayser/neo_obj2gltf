@@ -53,8 +53,8 @@ let options;
 describe("loadObj", () => {
   beforeEach(() => {
     options = structuredClone(obj2gltf.defaults);
-    options.resolver = resolveFile;
     options.guesser = mtlGuesses;
+    options.resolver = resolveFile;
     options.logger = () => {};
   });
 
@@ -62,7 +62,7 @@ describe("loadObj", () => {
     const objBlob = await openAsBlob("specs/data/box/box.obj");
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box"),
+      objDirectory: "specs/data/box",
     });
     const materials = data.materials;
     const nodes = data.nodes;
@@ -93,7 +93,7 @@ describe("loadObj", () => {
     const objBlob = await openAsBlob(objNormalsPath);
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-normals"),
+      objDirectory: "specs/data/box-normals",
     });
     const primitive = getPrimitives(data)[0];
     expect(primitive.positions.length / 3).toBe(24);
@@ -107,7 +107,7 @@ describe("loadObj", () => {
     );
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-unnormalized"),
+      objDirectory: "specs/data/box-unnormalized",
     });
     const scratchNormal = new Cartesian3();
     const primitive = getPrimitives(data)[0];
@@ -131,7 +131,7 @@ describe("loadObj", () => {
     const objBlob = await openAsBlob("specs/data/box-uvs/box-uvs.obj");
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-uvs"),
+      objDirectory: "specs/data/box-uvs",
     });
     const primitive = getPrimitives(data)[0];
     expect(primitive.positions.length / 3).toBe(20);
@@ -150,11 +150,11 @@ describe("loadObj", () => {
     const results = [
       await loadObj(objBlob1, {
         ...options,
-        guesser: mtlGuesses("specs/data/box-positions-only"),
+        objDirectory: "specs/data/box-positions-only",
       }),
       await loadObj(objBlob2, {
         ...options,
-        guesser: mtlGuesses("specs/data/box-negative-indices"),
+        objDirectory: "specs/data/box-negative-indices",
       }),
     ];
     const positionsReference = getPrimitives(
@@ -168,7 +168,7 @@ describe("loadObj", () => {
     const objBlob = await openAsBlob("specs/data/box-objects/box-objects.obj");
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-objects"),
+      objDirectory: "specs/data/box-objects",
     });
     const primitive = getPrimitives(data)[0];
     expect(primitive.positions.length / 3).toBe(24);
@@ -179,7 +179,7 @@ describe("loadObj", () => {
     const objBlob = await openAsBlob("specs/data/box-objects/box-objects.obj");
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-objects"),
+      objDirectory: "specs/data/box-objects",
     });
     const nodes = data.nodes;
     expect(nodes.length).toBe(3);
@@ -198,7 +198,7 @@ describe("loadObj", () => {
     const objBlob = await openAsBlob(objGroupsPath);
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-groups"),
+      objDirectory: "specs/data/box-groups",
     });
     const nodes = data.nodes;
     expect(nodes.length).toBe(3);
@@ -217,7 +217,7 @@ describe("loadObj", () => {
     const objObjectsGroupsBlob = await openAsBlob(objObjectsGroupsPath);
     const data = await loadObj(objObjectsGroupsBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-objects-groups"),
+      objDirectory: "specs/data/box-objects-groups",
     });
     const nodes = data.nodes;
     expect(nodes.length).toBe(3);
@@ -263,7 +263,7 @@ describe("loadObj", () => {
     );
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-objects-groups-materials"),
+      objDirectory: "specs/data/box-objects-groups-materials",
     });
     loadsObjWithObjectsGroupsAndMaterials(data);
   });
@@ -274,7 +274,7 @@ describe("loadObj", () => {
     const objBlob = await openAsBlob(objObjectsGroupsMaterialsPath2);
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-objects-groups-materials-2"),
+      objDirectory: "specs/data/box-objects-groups-materials-2",
     });
     loadsObjWithObjectsGroupsAndMaterials(data);
   });
@@ -283,7 +283,7 @@ describe("loadObj", () => {
     const objBlob = await openAsBlob("specs/data/concave/concave.obj");
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/concave"),
+      objDirectory: "specs/data/concave",
     });
     const primitive = getPrimitives(data)[0];
     expect(primitive.positions.length / 3).toBe(30);
@@ -294,7 +294,7 @@ describe("loadObj", () => {
     const objBlob = await openAsBlob("specs/data/box-usemtl/box-usemtl.obj");
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-usemtl"),
+      objDirectory: "specs/data/box-usemtl",
     });
     const nodes = data.nodes;
     expect(nodes.length).toBe(1);
@@ -329,7 +329,7 @@ describe("loadObj", () => {
     );
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-multiple-materials"),
+      objDirectory: "specs/data/box-multiple-materials",
     });
     const nodes = data.nodes;
     expect(nodes.length).toBe(1);
@@ -360,7 +360,7 @@ describe("loadObj", () => {
     );
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-uncleaned"),
+      objDirectory: "specs/data/box-uncleaned",
     });
     const nodes = data.nodes;
     const meshes = getMeshes(data);
@@ -378,7 +378,7 @@ describe("loadObj", () => {
     const objBlob = await openAsBlob("specs/data/box-mtllib/box-mtllib.obj");
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-mtllib"),
+      objDirectory: "specs/data/box-mtllib",
     });
     const materials = data.materials;
     expect(materials.length).toBe(3);
@@ -409,7 +409,7 @@ describe("loadObj", () => {
 
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-mtllib-spaces"),
+      objDirectory: "specs/data/box-mtllib-spaces",
     });
     const materials = data.materials;
     expect(materials.length).toBe(3);
@@ -442,7 +442,7 @@ describe("loadObj", () => {
 
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-missing-mtllib"),
+      objDirectory: "specs/data/box-missing-mtllib",
     });
     expect(data.materials.length).toBe(0);
     // expect(spy.calls.argsFor(0)[0].indexOf("ENOENT") >= 0).toBe(true);
@@ -465,7 +465,7 @@ describe("loadObj", () => {
     );
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-missing-usemtl"),
+      objDirectory: "specs/data/box-missing-usemtl",
     });
     expect(data.materials.length).toBe(1);
     expect(data.nodes[0].meshes[0].primitives[0].material).toBe("Material");
@@ -477,7 +477,7 @@ describe("loadObj", () => {
     );
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-unnamed-material"),
+      objDirectory: "specs/data/box-unnamed-material",
     });
     expect(data.materials.length).toBe(1);
     expect(data.nodes[0].meshes[0].primitives[0].material).toBe("");
@@ -489,7 +489,7 @@ describe("loadObj", () => {
     );
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-external-resources"),
+      objDirectory: "specs/data/box-external-resources",
     });
     const materials = data.materials;
     expect(materials.length).toBe(2);
@@ -507,7 +507,7 @@ describe("loadObj", () => {
     const objBlob = await openAsBlob(objResourcesInRootPath);
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-resources-in-root"),
+      objDirectory: "specs/data/box-resources-in-root",
     });
     const baseColorTexture =
       data.materials[0].pbrMetallicRoughness.baseColorTexture;
@@ -519,7 +519,7 @@ describe("loadObj", () => {
     const objBlob = await openAsBlob(objExternalResourcesInRootPath);
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-external-resources-in-root"),
+      objDirectory: "specs/data/box-external-resources-in-root",
     });
     const materials = data.materials;
     expect(materials.length).toBe(2);
@@ -539,7 +539,7 @@ describe("loadObj", () => {
     );
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-textured"),
+      objDirectory: "specs/data/box-textured",
     });
     const baseColorTexture =
       data.materials[0].pbrMetallicRoughness.baseColorTexture;
@@ -557,7 +557,7 @@ describe("loadObj", () => {
 
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-missing-texture"),
+      objDirectory: "specs/data/box-missing-texture",
     });
     expect(data.materials[0]).toBeUndefined();
   });
@@ -566,7 +566,7 @@ describe("loadObj", () => {
     const objBlob = await openAsBlob(objSubdirectoriesPath);
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-subdirectories"),
+      objDirectory: "specs/data/box-subdirectories",
     });
     const baseColorTexture =
       data.materials[0].pbrMetallicRoughness.baseColorTexture;
@@ -580,7 +580,7 @@ describe("loadObj", () => {
     );
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-windows-paths"),
+      objDirectory: "specs/data/box-windows-paths",
     });
     const baseColorTexture =
       data.materials[0].pbrMetallicRoughness.baseColorTexture;
@@ -597,7 +597,7 @@ describe("loadObj", () => {
     );
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-with-tabs"),
+      objDirectory: "specs/data/box-with-tabs",
     });
     const primitive = getPrimitives(data)[0];
     expect(primitive.positions.length / 3).toBe(24);
@@ -611,7 +611,7 @@ describe("loadObj", () => {
     );
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-mixed-attributes"),
+      objDirectory: "specs/data/box-mixed-attributes",
     });
     const primitives = getPrimitives(data);
     expect(primitives.length).toBe(4);
@@ -680,7 +680,7 @@ describe("loadObj", () => {
     );
     const data = await loadObj(objBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-missing-attributes"),
+      objDirectory: "specs/data/box-missing-attributes",
     });
     const primitive = getPrimitives(data)[0];
     expect(primitive.positions.length).toBeGreaterThan(0);
@@ -698,7 +698,7 @@ describe("loadObj", () => {
 
   it("applies triangle winding order sanitization", async () => {
     options.triangleWindingOrderSanitization = false;
-    options.guesser = mtlGuesses("specs/data/box-incorrect-winding-order");
+    options.objDirectory = "specs/data/box-incorrect-winding-order";
 
     const indicesIncorrect = await loadAndGetIndices(
       "specs/data/box-incorrect-winding-order/box-incorrect-winding-order.obj",

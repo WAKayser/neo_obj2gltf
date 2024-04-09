@@ -1,14 +1,10 @@
 # Change Log
 
-### TODO
-
-- Allow setting file resolver via options.
-
-### 4.0.2 - UNRELEASED
+### 5.0.0 - 2024-04-09
 
 - Input is now a blob. If the obj uses more files, objDirectory should be set to the base directory.
 - Output is simplified to always be a GLB.
-- Remove all
+- Files should be resolved via user provided functions
 
 ### 4.0.1 - 2024-04-03
 

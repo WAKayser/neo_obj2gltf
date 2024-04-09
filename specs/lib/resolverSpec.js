@@ -1,13 +1,10 @@
 import path from "path";
 import { promises as fsPromises } from "fs";
 
-export function mtlGuesses(directory) {
-  function guesser(mtlPath) {
-    const fullPath = path.join(directory, mtlPath);
-    const shallowPath = path.join(directory, path.basename(mtlPath));
-    return [fullPath, shallowPath];
-  }
-  return guesser;
+export function mtlGuesses(directory, mtlPath) {
+  const fullPath = path.join(directory, mtlPath);
+  const shallowPath = path.join(directory, path.basename(mtlPath));
+  return [fullPath, shallowPath];
 }
 
 export async function resolveFile(texturePath, mtlPath) {

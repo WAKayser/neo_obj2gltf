@@ -1,5 +1,5 @@
 import { loadTexture } from "../../lib/loadTexture.js";
-import { resolveFile } from "./resolverSpec.js";
+import { mtlGuesses, resolveFile } from "./resolverSpec.js";
 
 const pngTexturePath = "specs/data/box-complex-material/shininess.png";
 const jpgTexturePath = "specs/data/box-complex-material/emission.jpg";
@@ -10,7 +10,12 @@ const transparentTexturePath = "specs/data/box-complex-material/diffuse.png";
 
 describe("loadTexture", () => {
   it("loads png texture", async () => {
-    const texture = await loadTexture(pngTexturePath, "", resolveFile);
+    const texture = await loadTexture(
+      pngTexturePath,
+      "",
+      resolveFile,
+      mtlGuesses,
+    );
     expect(texture.transparent).toBe(false);
     expect(texture.source).toBeDefined();
     expect(texture.name).toBe("shininess");
@@ -21,7 +26,12 @@ describe("loadTexture", () => {
   });
 
   it("loads jpg texture", async () => {
-    const texture = await loadTexture(jpgTexturePath, "", resolveFile);
+    const texture = await loadTexture(
+      jpgTexturePath,
+      "",
+      resolveFile,
+      mtlGuesses,
+    );
     expect(texture.transparent).toBe(false);
     expect(texture.source).toBeDefined();
     expect(texture.name).toBe("emission");
@@ -32,7 +42,12 @@ describe("loadTexture", () => {
   });
 
   it("loads jpeg texture", async () => {
-    const texture = await loadTexture(jpegTexturePath, "", resolveFile);
+    const texture = await loadTexture(
+      jpegTexturePath,
+      "",
+      resolveFile,
+      mtlGuesses,
+    );
     expect(texture.transparent).toBe(false);
     expect(texture.source).toBeDefined();
     expect(texture.name).toBe("specular");
@@ -43,7 +58,12 @@ describe("loadTexture", () => {
   });
 
   it("loads gif texture", async () => {
-    const texture = await loadTexture(gifTexturePath, "", resolveFile);
+    const texture = await loadTexture(
+      gifTexturePath,
+      "",
+      resolveFile,
+      mtlGuesses,
+    );
     expect(texture.transparent).toBe(false);
     expect(texture.source).toBeDefined();
     expect(texture.name).toBe("ambient");
@@ -54,14 +74,24 @@ describe("loadTexture", () => {
   });
 
   it("loads grayscale texture", async () => {
-    const texture = await loadTexture(grayscaleTexturePath, "", resolveFile);
+    const texture = await loadTexture(
+      grayscaleTexturePath,
+      "",
+      resolveFile,
+      mtlGuesses,
+    );
     expect(texture.transparent).toBe(false);
     expect(texture.source).toBeDefined();
     expect(texture.extension).toBe(".png");
   });
 
   it("loads texture with alpha channel", async () => {
-    const texture = await loadTexture(transparentTexturePath, "", resolveFile);
+    const texture = await loadTexture(
+      transparentTexturePath,
+      "",
+      resolveFile,
+      mtlGuesses,
+    );
     expect(texture.transparent).toBe(false);
   });
 
@@ -73,6 +103,7 @@ describe("loadTexture", () => {
       transparentTexturePath,
       "",
       resolveFile,
+      mtlGuesses,
       options,
     );
     expect(texture.transparent).toBe(true);
@@ -82,7 +113,13 @@ describe("loadTexture", () => {
     const options = {
       decode: true,
     };
-    const texture = await loadTexture(pngTexturePath, "", resolveFile, options);
+    const texture = await loadTexture(
+      pngTexturePath,
+      "",
+      resolveFile,
+      mtlGuesses,
+      options,
+    );
     expect(texture.pixels).toBeDefined();
     expect(texture.width).toBe(211);
     expect(texture.height).toBe(211);
@@ -96,6 +133,7 @@ describe("loadTexture", () => {
       jpegTexturePath,
       "",
       resolveFile,
+      mtlGuesses,
       options,
     );
     expect(texture.pixels).toBeDefined();

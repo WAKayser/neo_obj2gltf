@@ -11,7 +11,8 @@ const missingMtllibObjPath =
 describe("obj2gltf", () => {
   it("converts obj to glb", async () => {
     const options = {
-      guesser: mtlGuesses("specs/data/box-textured/"),
+      guesser: mtlGuesses,
+      objDirectory: "specs/data/box-textured/",
     };
     const texturedObjBlob = await openAsBlob(texturedObjPath);
     const glb = await obj2gltf(texturedObjBlob, options);
@@ -20,7 +21,8 @@ describe("obj2gltf", () => {
   });
   it("converts obj to glb with separate resources", async () => {
     const options = {
-      guesser: mtlGuesses("specs/data/box-textured/"),
+      guesser: mtlGuesses,
+      objDirectory: "specs/data/box-textured/",
     };
     const texturedObjBlob = await openAsBlob(texturedObjPath);
     await obj2gltf(texturedObjBlob, options);
@@ -28,7 +30,8 @@ describe("obj2gltf", () => {
 
   it("converts obj with multiple textures", async () => {
     const options = {
-      guesser: mtlGuesses("specs/data/box-complex-material"),
+      guesser: mtlGuesses,
+      objDirectory: "specs/data/box-complex-material",
     };
     const complexObjBlob = await openAsBlob(complexObjPath);
     await obj2gltf(complexObjBlob, options);
@@ -36,7 +39,8 @@ describe("obj2gltf", () => {
 
   it("not sets overriding textures (1)", async () => {
     const options = {
-      guesser: mtlGuesses("specs/data/box-complex-material"),
+      objDirectory: "specs/data/box-complex-material",
+      guesser: mtlGuesses,
     };
 
     const complexObjBlob = await openAsBlob(complexObjPath);
@@ -45,7 +49,8 @@ describe("obj2gltf", () => {
 
   it("not sets overriding textures (2)", async () => {
     const options = {
-      guesser: mtlGuesses("specs/data/box-complex-material"),
+      objDirectory: "specs/data/box-complex-material",
+      guesser: mtlGuesses,
     };
     const complexObjBlob = await openAsBlob(complexObjPath);
     await obj2gltf(complexObjBlob, options);
@@ -57,7 +62,8 @@ describe("obj2gltf", () => {
       logger: (message) => {
         lastMessage = message;
       },
-      guesser: mtlGuesses("specs/data/box-missing-mtllib"),
+      guesser: mtlGuesses,
+      objDirectory: "specs/data/box-missing-mtllib",
     };
     const missingMtllibObjBlob = await openAsBlob(missingMtllibObjPath);
     await obj2gltf(missingMtllibObjBlob, options);
@@ -68,6 +74,7 @@ describe("obj2gltf", () => {
     const options = {
       metallicRoughness: true,
       specularGlossiness: true,
+      guesser: mtlGuesses,
       objDirectory: "specs/data/box-textured/",
     };
 

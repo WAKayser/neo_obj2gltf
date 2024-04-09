@@ -49,6 +49,7 @@ describe("createGltf", () => {
   beforeEach(async () => {
     options = structuredClone(obj2gltf.defaults);
     options.resolver = resolveFile;
+    options.guesser = mtlGuesses;
     options.logger = () => {};
 
     const boxObjBlob = await openAsBlob(boxObjPath);
@@ -59,23 +60,23 @@ describe("createGltf", () => {
 
     boxObjData = await loadObj(boxObjBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box"),
+      objDirectory: "specs/data/box",
     });
     groupObjData = await loadObj(groupObjBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-objects-groups-materials"),
+      objDirectory: "specs/data/box-objects-groups-materials",
     });
     complexObjData = await loadObj(complexObjBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-complex-material"),
+      objDirectory: "specs/data/box-complex-material",
     });
     noMaterialsObjData = await loadObj(noMaterialsObjBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-no-materials"),
+      objDirectory: "specs/data/box-no-materials",
     });
     mixedAttributesObjData = await loadObj(mixedAttributesObjBlob, {
       ...options,
-      guesser: mtlGuesses("specs/data/box-mixed-attributes-2"),
+      objDirectory: "specs/data/box-mixed-attributes-2",
     });
   });
 
