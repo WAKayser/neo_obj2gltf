@@ -68,7 +68,7 @@ describe("loadTexture", () => {
     const options = {
       checkTransparency: true,
     };
-    const texture = await loadTexture(transparentTexturePath, options);
+    const texture = await loadTexture(transparentTexturePath, "", options);
     expect(texture.transparent).toBe(true);
   });
 
@@ -76,7 +76,7 @@ describe("loadTexture", () => {
     const options = {
       decode: true,
     };
-    const texture = await loadTexture(pngTexturePath, options);
+    const texture = await loadTexture(pngTexturePath, "", options);
     expect(texture.pixels).toBeDefined();
     expect(texture.width).toBe(211);
     expect(texture.height).toBe(211);
@@ -86,7 +86,7 @@ describe("loadTexture", () => {
     const options = {
       decode: true,
     };
-    const texture = await loadTexture(jpegTexturePath, options);
+    const texture = await loadTexture(jpegTexturePath, "", options);
     expect(texture.pixels).toBeDefined();
     expect(texture.width).toBe(211);
     expect(texture.height).toBe(211);

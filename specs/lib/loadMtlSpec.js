@@ -53,18 +53,20 @@ let options;
 
 describe("loadMtl", () => {
   beforeAll(async () => {
-    diffuseTexture = await loadTexture(diffuseTexturePath, decodeOptions);
+    diffuseTexture = await loadTexture(diffuseTexturePath, "", decodeOptions);
     transparentDiffuseTexture = await loadTexture(
       transparentDiffuseTexturePath,
+      "",
       checkTransparencyOptions,
     );
-    alphaTexture = await loadTexture(alphaTexturePath, decodeOptions);
+    alphaTexture = await loadTexture(alphaTexturePath, "", decodeOptions);
     ambientTexture = await loadTexture(ambientTexturePath);
     normalTexture = await loadTexture(normalTexturePath);
     emissiveTexture = await loadTexture(emissiveTexturePath);
-    specularTexture = await loadTexture(specularTexturePath, decodeOptions);
+    specularTexture = await loadTexture(specularTexturePath, "", decodeOptions);
     specularShininessTexture = await loadTexture(
       specularShininessTexturePath,
+      "",
       decodeOptions,
     );
   });
