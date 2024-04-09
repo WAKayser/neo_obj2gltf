@@ -9,8 +9,6 @@ const texturedWithOptionsMaterialPath =
   "specs/data/box-texture-options/box-texture-options.mtl";
 const multipleMaterialsPath =
   "specs/data/box-multiple-materials/box-multiple-materials.mtl";
-const externalMaterialPath =
-  "specs/data/box-external-resources/box-external-resources.mtl";
 const resourcesInRootMaterialPath =
   "specs/data/box-resources-in-root/box-resources-in-root.mtl";
 const externalInRootMaterialPath =
@@ -155,7 +153,10 @@ describe("loadMtl", () => {
   });
 
   it("loads texture outside of the mtl directory", async () => {
-    const materials = await loadMtl(externalMaterialPath, options);
+    const materials = await loadMtl(
+      "specs/data/box-external-resources/box-external-resources.mtl",
+      options,
+    );
     const material = materials[0];
     const baseColorTexture = material.pbrMetallicRoughness.baseColorTexture;
     expect(baseColorTexture.source).toBeDefined();
