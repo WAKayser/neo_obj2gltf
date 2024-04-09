@@ -1,6 +1,7 @@
 import { loadMtl } from "../../lib/loadMtl.js";
 import { loadTexture } from "../../lib/loadTexture.js";
 import { obj2gltf } from "../../lib/obj2gltf.js";
+import { resolveFile } from "./resolverSpec.js";
 
 const coloredMaterialPath = "specs/data/box/box.mtl";
 const texturedMaterialPath =
@@ -51,26 +52,44 @@ let options;
 
 describe("loadMtl", () => {
   beforeAll(async () => {
-    diffuseTexture = await loadTexture(diffuseTexturePath, "", decodeOptions);
+    diffuseTexture = await loadTexture(
+      diffuseTexturePath,
+      "",
+      resolveFile,
+      decodeOptions,
+    );
     transparentDiffuseTexture = await loadTexture(
       transparentDiffuseTexturePath,
       "",
+      resolveFile,
       checkTransparencyOptions,
     );
-    alphaTexture = await loadTexture(alphaTexturePath, "", decodeOptions);
-    ambientTexture = await loadTexture(ambientTexturePath);
-    normalTexture = await loadTexture(normalTexturePath);
-    emissiveTexture = await loadTexture(emissiveTexturePath);
-    specularTexture = await loadTexture(specularTexturePath, "", decodeOptions);
+    alphaTexture = await loadTexture(
+      alphaTexturePath,
+      "",
+      resolveFile,
+      decodeOptions,
+    );
+    ambientTexture = await loadTexture(ambientTexturePath, "", resolveFile);
+    normalTexture = await loadTexture(normalTexturePath, "", resolveFile);
+    emissiveTexture = await loadTexture(emissiveTexturePath, "", resolveFile);
+    specularTexture = await loadTexture(
+      specularTexturePath,
+      "",
+      resolveFile,
+      decodeOptions,
+    );
     specularShininessTexture = await loadTexture(
       specularShininessTexturePath,
       "",
+      resolveFile,
       decodeOptions,
     );
   });
 
   beforeEach(() => {
     options = structuredClone(obj2gltf.defaults);
+    options.resolver = resolveFile;
     options.logger = () => {};
   });
 

@@ -1,8 +1,8 @@
 import Cartesian3 from "../../lib/Cartesian3.js";
-import path from "path";
 import { loadObj } from "../../lib/loadObj.js";
 import { obj2gltf } from "../../lib/obj2gltf.js";
 import { openAsBlob } from "fs";
+import { resolveFile } from "./resolverSpec.js";
 
 const objNormalsPath = "specs/data/box-normals/box-normals.obj";
 const objGroupsPath = "specs/data/box-groups/box-groups.obj";
@@ -53,6 +53,7 @@ let options;
 describe("loadObj", () => {
   beforeEach(() => {
     options = structuredClone(obj2gltf.defaults);
+    options.resolver = resolveFile;
     options.logger = () => {};
   });
 
@@ -444,9 +445,6 @@ describe("loadObj", () => {
     });
     expect(data.materials.length).toBe(0);
     expect(spy.calls.argsFor(0)[0].indexOf("ENOENT") >= 0).toBe(true);
-    expect(spy.calls.argsFor(0)[0].indexOf(path.resolve("/box.mtl")) >= 0).toBe(
-      true,
-    );
     expect(
       spy.calls
         .argsFor(1)[0]
@@ -560,24 +558,7 @@ describe("loadObj", () => {
       ...options,
       objDirectory: "specs/data/box-missing-texture",
     });
-    // const baseColorTexture =
-    //   data.materials[0].pbrMetallicRoughness.baseColorTexture;
     expect(data.materials[0]).toBeUndefined();
-    // expect(spy.calls.argsFor(0)[0].indexOf("ENOENT") >= 0).toBe(true);
-    // expect(
-    //   spy.calls.argsFor(0)[0].indexOf(path.resolve("/cesium.png")) >= 0,
-    // ).toBe(true);
-    // expect(
-    //   spy.calls
-    //     .argsFor(1)[0]
-    //     .indexOf(
-    //       "Attempting to read the texture file from within the obj directory instead.",
-    //     ) >= 0,
-    // ).toBe(true);
-    // expect(spy.calls.argsFor(2)[0].indexOf("ENOENT") >= 0).toBe(true);
-    // expect(
-    //   spy.calls.argsFor(3)[0].indexOf("Could not read texture file") >= 0,
-    // ).toBe(true);
   });
 
   it("loads obj with subdirectories", async () => {

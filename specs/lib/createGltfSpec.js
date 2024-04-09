@@ -3,6 +3,7 @@ import { createGltf } from "../../lib/createGltf.js";
 import { loadObj } from "../../lib/loadObj.js";
 import { loadMtl } from "../../lib/loadMtl.js";
 import { openAsBlob } from "fs";
+import { resolveFile } from "./resolverSpec.js";
 
 function clone(object, deep) {
   if (object === null || typeof object !== "object") {
@@ -47,6 +48,7 @@ describe("createGltf", () => {
 
   beforeEach(async () => {
     options = structuredClone(obj2gltf.defaults);
+    options.resolver = resolveFile;
     options.logger = () => {};
 
     const boxObjBlob = await openAsBlob(boxObjPath);
