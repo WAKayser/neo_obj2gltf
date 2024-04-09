@@ -3,7 +3,7 @@ import { createGltf } from "../../lib/createGltf.js";
 import { loadObj } from "../../lib/loadObj.js";
 import { loadMtl } from "../../lib/loadMtl.js";
 import { openAsBlob } from "fs";
-import { resolveFile } from "./resolverSpec.js";
+import { mtlGuesses, resolveFile } from "./resolverSpec.js";
 
 function clone(object, deep) {
   if (object === null || typeof object !== "object") {
@@ -59,23 +59,23 @@ describe("createGltf", () => {
 
     boxObjData = await loadObj(boxObjBlob, {
       ...options,
-      objDirectory: "specs/data/box",
+      guesser: mtlGuesses("specs/data/box"),
     });
     groupObjData = await loadObj(groupObjBlob, {
       ...options,
-      objDirectory: "specs/data/box-objects-groups-materials",
+      guesser: mtlGuesses("specs/data/box-objects-groups-materials"),
     });
     complexObjData = await loadObj(complexObjBlob, {
       ...options,
-      objDirectory: "specs/data/box-complex-material",
+      guesser: mtlGuesses("specs/data/box-complex-material"),
     });
     noMaterialsObjData = await loadObj(noMaterialsObjBlob, {
       ...options,
-      objDirectory: "specs/data/box-no-materials",
+      guesser: mtlGuesses("specs/data/box-no-materials"),
     });
     mixedAttributesObjData = await loadObj(mixedAttributesObjBlob, {
       ...options,
-      objDirectory: "specs/data/box-mixed-attributes-2",
+      guesser: mtlGuesses("specs/data/box-mixed-attributes-2"),
     });
   });
 
