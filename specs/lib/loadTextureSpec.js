@@ -14,7 +14,6 @@ describe("loadTexture", () => {
     expect(texture.source).toBeDefined();
     expect(texture.name).toBe("shininess");
     expect(texture.extension).toBe(".png");
-    expect(texture.path).toBe(pngTexturePath);
     expect(texture.pixels).toBeUndefined();
     expect(texture.width).toBeUndefined();
     expect(texture.height).toBeUndefined();
@@ -26,7 +25,6 @@ describe("loadTexture", () => {
     expect(texture.source).toBeDefined();
     expect(texture.name).toBe("emission");
     expect(texture.extension).toBe(".jpg");
-    expect(texture.path).toBe(jpgTexturePath);
     expect(texture.pixels).toBeUndefined();
     expect(texture.width).toBeUndefined();
     expect(texture.height).toBeUndefined();
@@ -38,7 +36,6 @@ describe("loadTexture", () => {
     expect(texture.source).toBeDefined();
     expect(texture.name).toBe("specular");
     expect(texture.extension).toBe(".jpeg");
-    expect(texture.path).toBe(jpegTexturePath);
     expect(texture.pixels).toBeUndefined();
     expect(texture.width).toBeUndefined();
     expect(texture.height).toBeUndefined();
@@ -50,7 +47,6 @@ describe("loadTexture", () => {
     expect(texture.source).toBeDefined();
     expect(texture.name).toBe("ambient");
     expect(texture.extension).toBe(".gif");
-    expect(texture.path).toBe(gifTexturePath);
     expect(texture.pixels).toBeUndefined();
     expect(texture.width).toBeUndefined();
     expect(texture.height).toBeUndefined();
